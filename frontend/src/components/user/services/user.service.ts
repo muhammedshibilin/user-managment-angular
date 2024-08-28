@@ -18,4 +18,10 @@ register(userData: FormData): Observable<any> {
     }));
 }
 
+login(userData:any):Observable<any>{
+   return this.http.post(`${this.apiUrl}/login`,userData,{observe:'response'})
+   .pipe(tap(response => {
+    console.log("full responseee",response)
+   }))
+}
 }
