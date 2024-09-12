@@ -1,1 +1,109 @@
-<p>dashboard works!</p>
+<app-navbar></app-navbar>
+
+<!-- Search Bar -->
+<div class="mb-6 flex justify-center mt-6">
+  <input 
+    [(ngModel)]="searchQuery" 
+    (input)="filterUsers()" 
+    placeholder="Search users..." 
+    class="border p-3 rounded w-full md:w-3/4 lg:w-1/2 xl:w-1/3 shadow-sm focus:ring-2 focus:ring-blue-500 transition duration-200"
+  />
+</div>
+
+<!-- Table Container with Side Borders -->
+<div class="px-4 md:px-8 lg:px-16 border-t border-gray-300 border-r border-l border-gray-300">
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md divide-y divide-gray-200">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-4 py-2 text-left text-gray-600">Profile</th>
+          <th class="px-4 py-2 text-left text-gray-600">Name</th>
+          <th class="px-4 py-2 text-left text-gray-600">Email</th>
+          <th class="px-4 py-2 text-left text-gray-600">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <tr *ngFor="let user of filteredUsers">
+          <td class="px-4 py-2">
+            <img 
+              *ngIf="editUserId !== user.id" 
+              [src]="user.image_url || 'assets/default-avatar.png'" 
+              alt="{{ user.name }}" 
+              class="w-12 h-12 rounded-full object-cover border-2 border-gray-300"
+            >
+            <div *ngIf="editUserId === user.id">
+              <img 
+                [src]="editableUser.image_url || 'assets/default-avatar.png'" 
+                alt="Preview" 
+                class="w-12 h-12 rounded-full object-cover mb-2"
+              >
+              <input 
+                type="file" 
+                (change)="onImageSelected($event)" 
+                class="file:mr-2 file:py-1 file:px-2 file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              />
+            </div>
+          </td>
+          <td class="px-4 py-2">
+            <div *ngIf="editUserId === user.id; else displayName">
+              <input 
+                [(ngModel)]="editableUser.name" 
+                class="border p-1 rounded w-full shadow-sm focus:ring-2 focus:ring-blue-500 transition duration-200"
+              />
+            </div>
+            <ng-template #displayName>
+              <span>{{ user.name }}</span>
+            </ng-template>
+          </td>
+          <td class="px-4 py-2">
+            <div *ngIf="editUserId === user.id; else displayEmail">
+              <input 
+                [(ngModel)]="editableUser.email" 
+                class="border p-1 rounded w-full shadow-sm focus:ring-2 focus:ring-blue-500 transition duration-200"
+              />
+            </div>
+            <ng-template #displayEmail>
+              <span>{{ user.email }}</span>
+            </ng-template>
+          </td>
+          <td class="px-4 py-2">
+            <div *ngIf="editUserId === user.id; else actionButtons">
+              <button 
+                (click)="saveUser()" 
+                class="bg-green-500 text-white py-1 px-2 rounded hover:bg-green-600 transition duration-200"
+              >
+                Save
+              </button>
+              <button 
+                (click)="cancelEdit()" 
+                class="bg-gray-500 text-white py-1 px-2 rounded hover:bg-gray-600 transition duration-200"
+              >
+                Cancel
+              </button>
+            </div>
+            <ng-template #actionButtons>
+              <button 
+                (click)="editUser(user)" 
+                class="bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600 transition duration-200"
+              >
+                Edit
+              </button>
+              <button 
+                (click)="deleteUser(user)" 
+                class="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 transition duration-200"
+              >
+                Delete
+              </button>
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="border-b border-gray-300"></div>
+</div>
+
+<!-- No Users Found Message -->
+<div *ngIf="filteredUsers.length === 0" class="text-center text-gray-500 mt-6">
+  <p>No users found.</p>
+</div>

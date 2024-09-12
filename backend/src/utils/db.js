@@ -9,7 +9,6 @@ const pool = new Pool({
   port: process.env.DB_PORT,
 });
 
-// Test the connection
 pool.connect((err, client, release) => {
   if (err) {
     console.error('Error acquiring client', err.stack);

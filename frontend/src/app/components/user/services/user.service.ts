@@ -13,6 +13,12 @@ export class UserServiceService {
 
   constructor(private http: HttpClient) {}
 
+   getToken(): string | null {
+    let token = localStorage.getItem('authToken');
+    console.log(token,"tokenennenenenn")
+    return token
+  }
+
   register(userData: FormData): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, userData, { observe: 'response' });
   }
@@ -24,6 +30,9 @@ export class UserServiceService {
       .pipe(
         tap( response => {
           console.log("user details from backend ,=> ",response.user)
+          if (response.user.token) {
+            localStorage.setItem('authToken',response.user.token)
+          }
         }),
         map(response => response.user)
       );

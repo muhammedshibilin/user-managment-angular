@@ -11,20 +11,19 @@ export const initialUserState: UserState = {
     error: null
   };
 
-
-export const userReducer = createReducer(
-  initialUserState,
-  on(UserActions.loginSuccess, (state, { user }) => ({
-    ...state,
-    user,
-    isLoggedIn: true,
-    error: null
-  })),
-  on(UserActions.loginFailure, (state, { error }) => ({
-    ...state,
-    user: null,
-    isLoggedIn: false,
-    error
-  })),
-  on(UserActions.logout, () => initialUserState)
-);
+  export const userReducer = createReducer(
+    initialUserState,
+    on(UserActions.loginSuccess, (state, { user, token }) => ({
+      ...state,
+      user,
+      isLoggedIn: true,
+      error: null
+    })),
+    on(UserActions.loginFailure, (state, { error }) => ({
+      ...state,
+      user: null,
+      isLoggedIn: false,
+      error
+    })),
+    on(UserActions.logout, () => initialUserState)
+  );

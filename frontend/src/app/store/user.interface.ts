@@ -1,10 +1,12 @@
 export interface User {
-    id: number;
-    name: string;
-    email: string;
-    isadmin: boolean;
-    imageUrl: string;
-  }
+  id: string;
+  name: string;
+  email: string;
+  token: string;
+  image_url:string;
+  isadmin?: boolean;
+}
+
 
   
   export interface UserState {

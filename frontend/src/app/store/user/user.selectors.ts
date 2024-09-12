@@ -15,10 +15,15 @@ export const selectUserDetails = createSelector(
 
 export const selectIsLoggedIn = createSelector(
   selectUserState,
-  (state: UserState) => state.isLoggedIn
+  (userState) => userState.isLoggedIn
 );
 
-export const selectUserError = createSelector(
+export const selectAuthToken = createSelector(
   selectUserState,
-  (state: UserState) => state.error
+  (userState) => userState.user?.token || null
+);
+
+export const selectCurrentUser = createSelector(
+  selectUserState,
+  (userState) => userState.user || null
 );

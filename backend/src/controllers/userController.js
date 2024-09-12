@@ -1,5 +1,13 @@
 const db = require('../utils/db');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+require('dotenv').config()
+
+
+const JWT_SECRET = process.env.jwt_secret
+
+
+
 
 const registerUser = async (req, res) => {
     try {
@@ -53,18 +61,24 @@ const loginUser = async(req,res) => {
             console.log('Password mismatch');
             return res.status(401).json({message:'Invalid credentials',})
         }
-        
-        console.log(user)
-        res.status(200).json({
-            message:'login successfull',
-            user:{
-                id:user.id,
-                name:user.name,
-                email:user.email,
-                isadmin:user.isadmin,
-                imageUrl:user.image_url
-            }
-        })
+
+        const token = jwt.sign(
+            {
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              image_url:user.image_url,
+              isadmin: user.isadmin
+            },
+            JWT_SECRET,
+            { expiresIn: '1d' }
+          );
+          
+          res.status(200).json({
+            message: 'Login successful',
+            user: { ...user, token } 
+          });
+          
     }catch(error){
         console.log('login error',error)
         res.status(500).json({message:'server error',error})

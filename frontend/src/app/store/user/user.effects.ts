@@ -19,7 +19,7 @@ export class UserEffects {
         const { email, password } = action; 
 
         return this.api.login({email,password}).pipe( 
-          map(user => UserActions.loginSuccess({ user })), 
+          map(user => UserActions.loginSuccess({ user,token:user.token })), 
           catchError(error => of(UserActions.loginFailure({ error: error.message })))
         );
       })
